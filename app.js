@@ -170,14 +170,22 @@ async function showResult(result, code) {
           ${getStatusField(d)}
         </div>
 
-        <div class="result-actions">
-          <button class="result-btn primary" onclick="downloadVerificationReport(${JSON.stringify(d).replace(/"/g, '&quot;')})">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            ${t('result.downloadBtn')}
+        <div class="result-actions" style="flex-wrap:wrap;gap:8px">
+          <button class="result-btn primary" onclick="viewFullInvoice(${JSON.stringify(d).replace(/"/g, '&quot;')})" style="flex:2;min-width:160px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            View Full Invoice
           </button>
-          <button class="result-btn ghost" onclick="clearInput(); document.getElementById('invoiceInput').focus();">
+          <button class="result-btn primary" onclick="printFullInvoice(${JSON.stringify(d).replace(/"/g, '&quot;')})" style="flex:1;min-width:120px;background:#0f766e">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+          <button class="result-btn ghost" onclick="downloadVerificationReport(${JSON.stringify(d).replace(/"/g, '&quot;')})" style="flex:1;min-width:120px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+          <button class="result-btn ghost" onclick="clearInput(); document.getElementById('invoiceInput').focus();" style="flex:1;min-width:120px">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-            ${t('result.verifyAnotherBtn')}
+            Verify Another
           </button>
         </div>
       </div>
@@ -240,6 +248,214 @@ function getStatusField(d) {
 function getTypeLabel(type) {
   const map = { payment: t('result.paymentType'), loan: t('result.loanType'), customer: t('result.customerType') };
   return map[type] || type || 'Invoice';
+}
+
+
+// ── Build full invoice HTML from Firebase data (mirrors desktop app output) ──
+function buildInvoiceHtmlFromData(d) {
+  const fmtN = n => Number(n||0).toLocaleString('en-IQ',{minimumFractionDigits:0,maximumFractionDigits:0});
+  const fmtD = s => {
+    if (!s) return '—';
+    try {
+      if (s.seconds) return new Date(s.seconds*1000).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      return new Date(s).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+    } catch { return String(s); }
+  };
+  const primary = '#1e3a8a', accent = '#2563eb';
+  const sd = d.data || {};
+  const verifyURL = `https://verify.amezona.com?code=${d.invoiceNumber}`;
+  const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=110x110&format=png&ecc=H&margin=4&data=${encodeURIComponent(verifyURL)}`;
+
+  let rows = '';
+  if (d.type === 'payment') {
+    rows = `
+      <tr class="hl"><td>Amount Paid</td><td>${fmtN(sd.amount)} IQD</td></tr>
+      <tr><td>Payment Date</td><td>${fmtD(sd.date)}</td></tr>
+      <tr><td>Loan Reference</td><td>${sd.loanId||'—'}</td></tr>
+      <tr><td>Method</td><td>${sd.method||'Cash'}</td></tr>
+      ${sd.note?`<tr><td>Note</td><td>${sd.note}</td></tr>`:''}
+    `;
+  } else if (d.type === 'loan') {
+    rows = `
+      <tr class="hl"><td>Loan Amount</td><td>${fmtN(sd.loanAmount)} IQD</td></tr>
+      <tr><td>Monthly Payment</td><td>${fmtN(sd.monthlyPayment)} IQD</td></tr>
+      <tr><td>Duration</td><td>${sd.duration||'—'} months</td></tr>
+      <tr><td>Start Date</td><td>${fmtD(sd.startDate)}</td></tr>
+      <tr><td>End Date</td><td>${fmtD(sd.endDate)}</td></tr>
+      <tr><td>Status</td><td>${sd.status||'—'}</td></tr>
+      <tr><td>Total Paid</td><td>${fmtN(sd.totalPaid)} IQD</td></tr>
+      <tr><td>Remaining</td><td>${fmtN(sd.remaining)} IQD</td></tr>
+    `;
+  } else if (d.type === 'custom') {
+    rows = `<tr class="hl"><td>Total</td><td>${fmtN(sd.total)} ${d.currency||'IQD'}</td></tr>
+            <tr><td>Items</td><td>${sd.itemCount||'—'}</td></tr>`;
+  } else {
+    rows = `<tr class="hl"><td>Total Portfolio</td><td>${fmtN(sd.totalAmount)} IQD</td></tr>
+            <tr><td>Total Loans</td><td>${sd.totalLoans||0}</td></tr>`;
+  }
+
+  return `<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${d.invoiceNumber}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#fff;color:#1e293b;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:210mm;min-height:297mm;margin:0 auto;display:flex;flex-direction:column}
+.stripe{height:5px;background:linear-gradient(90deg,${primary},${accent})}
+.v-banner{background:#f0fdf4;border-bottom:2px solid #86efac;padding:9px 36px;display:flex;align-items:center;gap:10px;font-size:12px;color:#166534;font-weight:600}
+.hdr{padding:24px 36px 18px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #f1f5f9}
+.co-circle{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,${primary},${accent});display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.co-circle svg{width:22px;height:22px}
+.co-name{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:2px}
+.co-line{font-size:9px;color:#94a3b8;margin:1px 0}
+.inv-lbl{font-size:28px;font-weight:900;letter-spacing:3px;color:${primary};display:block;margin-bottom:6px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:3px 9px;font-size:9.5px;color:#475569;margin:2px 0;white-space:nowrap}
+.pill b{color:#0f172a;font-weight:600}
+.body{flex:1;padding:20px 36px}
+.billing{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.bc{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;border-left:3px solid ${accent}}
+.bc-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#94a3b8;margin-bottom:7px}
+.bc-name{font-size:12px;font-weight:700;color:#0f172a;margin-bottom:3px}
+.bc p{font-size:10px;color:#64748b;margin:2px 0}
+.sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;padding-bottom:7px;border-bottom:2px solid #f1f5f9;margin-bottom:0}
+table{width:100%;border-collapse:collapse}
+tr{border-bottom:1px solid #f1f5f9}
+td{padding:9px 6px;font-size:11px}
+td:first-child{color:#64748b;font-weight:500;width:45%}
+td:last-child{font-weight:700;color:#0f172a;text-align:right}
+tr.hl td{background:#eff6ff;color:#1d4ed8}
+.ftr{padding:14px 36px 16px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center}
+.ftr-terms h6{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:4px}
+.ftr-terms p{font-size:8.5px;color:#94a3b8;margin:1px 0}
+.qr-box{text-align:center;flex-shrink:0}
+.qr-img{width:92px;height:92px;border:1px solid #e2e8f0;border-radius:8px;padding:3px;background:#fff;display:block}
+.qr-lbl{font-size:7.5px;color:#94a3b8;margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.pg{text-align:center;font-size:8px;color:#cbd5e1;padding-bottom:10px}
+@media print{body{margin:0}.page{width:100%;min-height:100vh}}
+</style>
+</head><body>
+<div class="page">
+<div class="stripe"></div>
+<div class="v-banner">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  VERIFIED &amp; AUTHENTIC — Issued by ${d.company?.name||'Loan Management Pro'}
+</div>
+<div class="hdr">
+  <div style="display:flex;align-items:flex-start;gap:12px">
+    <div class="co-circle">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="9" width="26" height="18" rx="3" stroke="white" stroke-width="1.8"/>
+        <path d="M3 15h26" stroke="white" stroke-width="1.8"/>
+        <circle cx="8" cy="22" r="1.5" fill="white"/>
+        <rect x="13" y="20.5" width="11" height="3" rx="1" fill="white"/>
+        <path d="M10 6L16 3L22 6" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="co-name">${d.company?.name||'Loan Management Pro'}</div>
+      <div class="co-line">📍 ${d.company?.address||''}</div>
+      <div class="co-line">📞 ${d.company?.phone||''} | ✉️ ${d.company?.email||''}</div>
+      <div class="co-line">🌐 ${d.company?.website||'verify.amezona.com'}</div>
+    </div>
+  </div>
+  <div style="text-align:right">
+    <span class="inv-lbl">INVOICE</span>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+      <div class="pill">Invoice # <b>${d.invoiceNumber}</b></div>
+      <div class="pill">Issued <b>${fmtD(d.issuedAt||d.createdAt)}</b></div>
+      <div class="pill">Type <b>${(d.type||'invoice').toUpperCase()}</b></div>
+    </div>
+  </div>
+</div>
+<div class="body">
+  <div class="billing">
+    <div class="bc">
+      <div class="bc-lbl">Billed To</div>
+      <div class="bc-name">${d.customer?.name||'—'}</div>
+      ${d.customer?.phone?`<p>📞 ${d.customer.phone}</p>`:''}
+      ${d.customer?.email?`<p>✉️ ${d.customer.email}</p>`:''}
+    </div>
+    <div class="bc">
+      <div class="bc-lbl">Issued By</div>
+      <div class="bc-name">${d.company?.name||'Loan Management Pro'}</div>
+      ${d.company?.address?`<p>📍 ${d.company.address}</p>`:''}
+      ${d.company?.email?`<p>✉️ ${d.company.email}</p>`:''}
+    </div>
+  </div>
+  <div class="sec-title">Invoice Details</div>
+  <table><tbody>${rows}</tbody></table>
+</div>
+<div class="ftr">
+  <div class="ftr-terms">
+    <h6>Verification Certificate</h6>
+    <p>Verified on ${new Date().toLocaleString()} via verify.amezona.com</p>
+    <p>© ${new Date().getFullYear()} ${d.company?.name||'Loan Management Pro'}. All rights reserved.</p>
+  </div>
+  <div class="qr-box">
+    <img class="qr-img" src="${qrURL}" alt="QR"
+         onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=92x92&data=${encodeURIComponent(d.invoiceNumber)}'"/>
+    <div class="qr-lbl">Scan to re-verify</div>
+  </div>
+</div>
+<div class="pg">Page 1 of 1 | ${d.invoiceNumber} | verify.amezona.com</div>
+</div>
+</body></html>`;
+}
+
+// View invoice in a modal overlay on the page
+function viewFullInvoice(data) {
+  if (typeof data === 'string') { try { data = JSON.parse(data); } catch { return; } }
+  const overlay = document.createElement('div');
+  overlay.id = '__inv_overlay__';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;flex-direction:column;';
+  overlay.innerHTML = `
+    <div style="background:#1e293b;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="color:#fff;font-weight:600;font-size:14px">📄 ${data.invoiceNumber}</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="printFullInvoice(${JSON.stringify(data).replace(/"/g,'&quot;')})"
+          style="padding:7px 14px;background:#3b82f6;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600">
+          🖨️ Print / PDF
+        </button>
+        <button onclick="document.getElementById('__inv_overlay__').remove()"
+          style="padding:7px 14px;background:#475569;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:13px">
+          ✕ Close
+        </button>
+      </div>
+    </div>
+    <iframe id="__inv_frame__" style="flex:1;border:none;background:#fff"
+      sandbox="allow-same-origin allow-scripts"></iframe>
+  `;
+  document.body.appendChild(overlay);
+  const frame = document.getElementById('__inv_frame__');
+  const html = buildInvoiceHtmlFromData(data);
+  frame.contentDocument.open();
+  frame.contentDocument.write(html);
+  frame.contentDocument.close();
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+// Print invoice directly (no popup — uses hidden iframe)
+function printFullInvoice(data) {
+  if (typeof data === 'string') { try { data = JSON.parse(data); } catch { return; } }
+  const html = buildInvoiceHtmlFromData(data);
+  const old = document.getElementById('__inv_print_iframe__');
+  if (old) old.remove();
+  const f = document.createElement('iframe');
+  f.id = '__inv_print_iframe__';
+  f.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:210mm;height:297mm;border:none;visibility:hidden;';
+  document.body.appendChild(f);
+  f.onload = () => {
+    setTimeout(() => {
+      try { f.contentWindow.focus(); f.contentWindow.print(); } catch {}
+      setTimeout(() => f.remove(), 2500);
+    }, 600);
+  };
+  f.contentDocument.open();
+  f.contentDocument.write(html);
+  f.contentDocument.close();
 }
 
 // ── Download verification report ───────────────────────────────────────────
