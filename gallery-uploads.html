@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Gallery Photo Upload Instructions — SHIRWAN IT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#f8fafc;color:#1e293b;padding:40px 20px;line-height:1.6}
+    .page{max-width:860px;margin:0 auto}
+    h1{font-size:1.9rem;font-weight:900;color:#0f172a;margin-bottom:6px}
+    .subtitle{font-size:15px;color:#64748b;margin-bottom:40px}
+    h2{font-size:1.1rem;font-weight:700;color:#1e3a8a;margin:32px 0 14px;display:flex;align-items:center;gap:10px}
+    h2 .num{width:28px;height:28px;background:#1e3a8a;color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+    p{font-size:14px;color:#374151;margin-bottom:10px}
+    code{background:#e2e8f0;color:#1d4ed8;padding:2px 7px;border-radius:5px;font-size:13px;font-family:'Courier New',monospace}
+    pre{background:#0f172a;color:#e2e8f0;padding:20px 24px;border-radius:12px;font-size:13px;overflow-x:auto;margin:12px 0 20px;line-height:1.7}
+    pre .cm{color:#64748b}
+    pre .kw{color:#7dd3fc}
+    pre .st{color:#86efac}
+    pre .at{color:#fbbf24}
+    pre .cn{color:#f9a8d4}
+    .card{background:#fff;border-radius:16px;border:1px solid #e2e8f0;padding:24px 28px;margin-bottom:20px}
+    .tip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin:12px 0;font-size:14px;color:#1d4ed8}
+    .tip strong{font-weight:700}
+    .warn{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px 18px;margin:12px 0;font-size:14px;color:#92400e}
+    table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}
+    th{background:#f1f5f9;padding:10px 14px;text-align:left;font-weight:600;color:#374151;border-bottom:2px solid #e2e8f0}
+    td{padding:10px 14px;border-bottom:1px solid #f1f5f9;color:#374151}
+    tr:last-child td{border-bottom:none}
+    .cat-solar{color:#d97706;font-weight:700} .cat-internet{color:#1d4ed8;font-weight:700} .cat-camera{color:#059669;font-weight:700}
+    .back-link{display:inline-flex;align-items:center;gap:8px;color:#1e3a8a;font-weight:600;font-size:14px;text-decoration:none;margin-bottom:28px}
+    .back-link:hover{opacity:.75}
+    .folder-tree{background:#0f172a;color:#86efac;padding:20px 24px;border-radius:12px;font-family:'Courier New',monospace;font-size:13px;line-height:1.9;margin:12px 0 20px}
+    .folder-tree .d{color:#7dd3fc} .folder-tree .f{color:#e2e8f0} .folder-tree .c{color:#64748b}
+    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .badge.solar{background:#fef3c7;color:#d97706}
+    .badge.internet{background:#dbeafe;color:#1d4ed8}
+    .badge.camera{background:#d1fae5;color:#059669}
+    .copy-btn{float:right;background:#1e3a8a;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;margin-top:-2px}
+    .copy-btn:hover{opacity:.85}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a href="about.html" class="back-link">← Back to SHIRWAN IT page</a>
+
+  <h1>📸 Gallery Photo Upload Instructions</h1>
+  <p class="subtitle">Step-by-step guide for adding real project photos to the SHIRWAN IT About page gallery.</p>
+
+  <!-- Step 1 -->
+  <div class="card">
+    <h2><span class="num">1</span> Create the folder structure</h2>
+    <p>Create a folder called <code>gallery/</code> in the same directory as <code>about.html</code>. Put all your project photos inside it.</p>
+    <div class="folder-tree">
+<span class="c">your-website/</span>
+├── <span class="f">about.html</span>
+├── <span class="f">index.html</span>
+├── <span class="f">style.css</span>
+├── <span class="f">app.js</span>
+├── <span class="f">gallery-uploads.html</span>  <span class="c">← this file</span>
+└── <span class="d">gallery/</span>              <span class="c">← create this folder</span>
+    ├── <span class="f">solar-1.jpg</span>
+    ├── <span class="f">solar-2.jpg</span>
+    ├── <span class="f">solar-3.jpg</span>
+    ├── <span class="f">internet-1.jpg</span>
+    ├── <span class="f">internet-2.jpg</span>
+    ├── <span class="f">internet-3.jpg</span>
+    ├── <span class="f">camera-1.jpg</span>
+    ├── <span class="f">camera-2.jpg</span>
+    └── <span class="f">camera-3.jpg</span>
+    </div>
+    <div class="tip"><strong>Tip:</strong> Use JPEG (.jpg) for photos — they're smallest. PNG is fine too but larger. Aim for 1200–2000px wide, under 500KB each for fast loading.</div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="card">
+    <h2><span class="num">2</span> Recommended photo content per category</h2>
+    <table>
+      <tr><th>File name</th><th>Category</th><th>What to photograph</th></tr>
+      <tr><td><code>solar-1.jpg</code></td><td><span class="badge solar">☀️ Solar</span></td><td>Rooftop panels installed on a house — wide shot from outside</td></tr>
+      <tr><td><code>solar-2.jpg</code></td><td><span class="badge solar">☀️ Solar</span></td><td>Inverter + battery setup on a wall indoors</td></tr>
+      <tr><td><code>solar-3.jpg</code></td><td><span class="badge solar">☀️ Solar</span></td><td>Team installing panels, or close-up of panel array</td></tr>
+      <tr><td><code>internet-1.jpg</code></td><td><span class="badge internet">🌐 Internet</span></td><td>Access point or antenna mounted on roof / pole</td></tr>
+      <tr><td><code>internet-2.jpg</code></td><td><span class="badge internet">🌐 Internet</span></td><td>Server rack / patch panel / cabling work</td></tr>
+      <tr><td><code>internet-3.jpg</code></td><td><span class="badge internet">🌐 Internet</span></td><td>WiFi router or switch installation in office</td></tr>
+      <tr><td><code>camera-1.jpg</code></td><td><span class="badge camera">📷 Camera</span></td><td>Dome or bullet camera mounted on wall/ceiling</td></tr>
+      <tr><td><code>camera-2.jpg</code></td><td><span class="badge camera">📷 Camera</span></td><td>NVR monitor showing camera feeds</td></tr>
+      <tr><td><code>camera-3.jpg</code></td><td><span class="badge camera">📷 Camera</span></td><td>PTZ or outdoor camera on a pole / corner bracket</td></tr>
+    </table>
+    <div class="warn">⚠️ <strong>Privacy:</strong> Blur or crop out faces, ID cards, license plates or anything personally identifiable before uploading photos to a public website.</div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="card">
+    <h2><span class="num">3</span> Replace placeholder cards in about.html</h2>
+    <p>Open <code>about.html</code> and find the <strong>GALLERY GRID</strong> section (search for <code>id="galleryGrid"</code>). Each placeholder looks like this — <strong>delete it</strong> and replace with the template below.</p>
+
+    <p style="margin-top:16px;font-weight:600;color:#374151">DELETE this placeholder block:</p>
+    <pre><span class="cm">&lt;!-- DELETE THIS --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-placeholder"</span> <span class="at">data-cat</span>=<span class="st">"solar"</span>&gt;
+  ...
+&lt;/<span class="kw">div</span>&gt;</pre>
+
+    <p style="font-weight:600;color:#374151">REPLACE with this real photo block:</p>
+    <pre><span class="cm">&lt;!-- ☀️ Solar photo --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"solar"</span>&gt;
+  &lt;<span class="kw">img</span>
+    <span class="at">src</span>=<span class="st">"gallery/solar-1.jpg"</span>
+    <span class="at">alt</span>=<span class="st">"Solar panel installation — Erbil"</span>
+    <span class="at">loading</span>=<span class="st">"lazy"</span>
+  /&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;
+    &lt;<span class="kw">div</span>&gt;
+      &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat solar"</span>&gt;☀️ Solar&lt;/<span class="kw">div</span>&gt;
+      &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Rooftop Solar — Erbil&lt;/<span class="kw">div</span>&gt;
+    &lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;</pre>
+  </div>
+
+  <!-- Step 4 — All templates -->
+  <div class="card">
+    <h2><span class="num">4</span> Ready-to-paste templates for all 9 photos</h2>
+    <p>Copy the entire block below and paste it <strong>inside</strong> <code>&lt;div class="gallery-grid" id="galleryGrid"&gt;</code>, replacing all the placeholders.</p>
+
+    <pre><span class="cm">&lt;!-- ═══════════════════════════════════════════════════════
+     SHIRWAN IT — Gallery items
+     Replace each src with your real photo path
+     ═══════════════════════════════════════════════════════ --&gt;</span>
+
+<span class="cm">&lt;!-- ☀️ SOLAR 1 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"solar"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/solar-1.jpg"</span> <span class="at">alt</span>=<span class="st">"Solar panel installation"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat solar"</span>&gt;☀️ Solar&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Rooftop Solar — Erbil&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- ☀️ SOLAR 2 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"solar"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/solar-2.jpg"</span> <span class="at">alt</span>=<span class="st">"Battery and inverter setup"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat solar"</span>&gt;☀️ Solar&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Battery &amp; Inverter — Sulaymaniyah&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- ☀️ SOLAR 3 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"solar"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/solar-3.jpg"</span> <span class="at">alt</span>=<span class="st">"Solar panel array"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat solar"</span>&gt;☀️ Solar&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Solar Array — Duhok&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- 🌐 INTERNET 1 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"internet"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/internet-1.jpg"</span> <span class="at">alt</span>=<span class="st">"Access point installation"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat internet"</span>&gt;🌐 Internet&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Wireless Access Point — Erbil&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- 🌐 INTERNET 2 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"internet"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/internet-2.jpg"</span> <span class="at">alt</span>=<span class="st">"Server rack and cabling"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat internet"</span>&gt;🌐 Internet&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Server Room &amp; Cabling — Sulaymaniyah&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- 🌐 INTERNET 3 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"internet"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/internet-3.jpg"</span> <span class="at">alt</span>=<span class="st">"WiFi router setup"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat internet"</span>&gt;🌐 Internet&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Office Network Setup — Duhok&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- 📷 CAMERA 1 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"camera"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/camera-1.jpg"</span> <span class="at">alt</span>=<span class="st">"CCTV dome camera"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat camera"</span>&gt;📷 Camera&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;CCTV Installation — Erbil Shop&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- 📷 CAMERA 2 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"camera"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/camera-2.jpg"</span> <span class="at">alt</span>=<span class="st">"NVR monitor setup"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat camera"</span>&gt;📷 Camera&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;NVR Monitor Setup — Duhok&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;
+
+<span class="cm">&lt;!-- 📷 CAMERA 3 --&gt;</span>
+&lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gallery-item"</span> <span class="at">data-cat</span>=<span class="st">"camera"</span>&gt;
+  &lt;<span class="kw">img</span> <span class="at">src</span>=<span class="st">"gallery/camera-3.jpg"</span> <span class="at">alt</span>=<span class="st">"Outdoor PTZ camera"</span> <span class="at">loading</span>=<span class="st">"lazy"</span>/&gt;
+  &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-overlay"</span>&gt;&lt;<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-cat camera"</span>&gt;📷 Camera&lt;/<span class="kw">div</span>&gt;
+    &lt;<span class="kw">div</span> <span class="at">class</span>=<span class="st">"gi-label"</span>&gt;Outdoor PTZ — Sulaymaniyah&lt;/<span class="kw">div</span>&gt;
+  &lt;/<span class="kw">div</span>&gt;&lt;/<span class="kw">div</span>&gt;
+&lt;/<span class="kw">div</span>&gt;</pre>
+  </div>
+
+  <!-- Step 5 — Add more photos -->
+  <div class="card">
+    <h2><span class="num">5</span> Adding more photos (beyond the 9 defaults)</h2>
+    <p>Just copy any gallery-item block and change the <code>src</code>, <code>alt</code>, <code>data-cat</code> and label text. The masonry layout handles any number automatically.</p>
+
+    <p style="margin-top:12px">Valid <code>data-cat</code> values:</p>
+    <table style="width:auto;margin-top:8px">
+      <tr><th>data-cat</th><th>Filter tab it appears under</th><th>gi-cat class to use</th></tr>
+      <tr><td><code>solar</code></td><td>Solar</td><td><code>gi-cat solar</code></td></tr>
+      <tr><td><code>internet</code></td><td>Internet</td><td><code>gi-cat internet</code></td></tr>
+      <tr><td><code>camera</code></td><td>Cameras</td><td><code>gi-cat camera</code></td></tr>
+    </table>
+
+    <div class="tip"><strong>Tip:</strong> Mix portrait and landscape photos — the masonry layout looks best with varied heights. Aim for 60% landscape, 40% portrait.</div>
+  </div>
+
+  <!-- Step 6 — Optimize -->
+  <div class="card">
+    <h2><span class="num">6</span> Photo optimization (important for fast loading)</h2>
+    <p>Large photos slow down the page. Compress them before uploading:</p>
+    <table>
+      <tr><th>Tool</th><th>How to use</th><th>Target size</th></tr>
+      <tr><td><strong>squoosh.app</strong></td><td>Free website — drag &amp; drop photo, download compressed</td><td>Under 200KB per photo</td></tr>
+      <tr><td><strong>TinyPNG.com</strong></td><td>Free website — upload up to 20 photos at once</td><td>Reduces by 60–80%</td></tr>
+      <tr><td><strong>Windows Photos app</strong></td><td>Open photo → ⋯ → Resize → Medium or Small</td><td>Approx 800KB→150KB</td></tr>
+    </table>
+    <div class="tip"><strong>Recommended size:</strong> 1400px wide maximum, saved as JPEG at 80% quality. This gives sharp photos on all screens while loading quickly.</div>
+  </div>
+
+  <!-- Done -->
+  <div style="text-align:center;padding:32px 0;color:#64748b;font-size:14px">
+    Built by <strong>BlackCode Soft Company LTD</strong> for SHIRWAN IT · Kurdistan Region, Iraq
+  </div>
+
+</div>
+</body>
+</html>
