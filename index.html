@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invoice Verification — Loan Management Pro</title>
-  <meta name="description" content="Verify the authenticity of invoices and documents issued by Loan Management Pro." />
+  <title>Loan Management Pro — Invoice Verification</title>
+  <meta name="description" content="Verify the authenticity of invoices issued by Loan Management Pro. Free, instant, real-time." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Firebase SDK (v9 compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
   <!-- html5-qrcode for camera scanning -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -23,10 +24,50 @@
 </head>
 <body>
 
+  <!-- ── LOGIN MODAL ── -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeLoginModal()">✕</button>
+      <div class="modal-logo">
+        <div class="nav-logo-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="10" width="32" height="22" rx="3" stroke="white" stroke-width="2.5"/>
+            <path d="M4 17h32" stroke="white" stroke-width="2.5"/>
+            <circle cx="10" cy="25" r="2" fill="white"/>
+            <rect x="16" y="23" width="14" height="4" rx="1.5" fill="white"/>
+          </svg>
+        </div>
+      </div>
+      <h2 class="modal-title">Staff Login</h2>
+      <p class="modal-sub">Sign in to view full invoice content</p>
+
+      <div id="loginError" class="login-error" style="display:none"></div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="staff@company.com" autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div style="position:relative">
+          <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+          <button class="pw-toggle" onclick="togglePw()" id="pwToggle">👁</button>
+        </div>
+      </div>
+
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">
+        <span id="loginBtnText">Sign In</span>
+        <div class="btn-spinner" id="loginSpinner" style="display:none"></div>
+      </button>
+
+      <p class="login-note">Only authorised staff can log in. Public visitors can verify invoices without logging in.</p>
+    </div>
+  </div>
+
   <!-- ── NAV ── -->
   <nav class="nav" id="nav">
     <div class="nav-inner">
-      <a href="#" class="nav-logo">
+      <a href="#home" class="nav-logo">
         <div class="nav-logo-icon">
           <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="4" y="10" width="32" height="22" rx="3" stroke="white" stroke-width="2.5"/>
@@ -38,20 +79,47 @@
         </div>
         <div>
           <div class="nav-logo-name">Loan Management Pro</div>
-          <div class="nav-logo-sub">Invoice Verification</div>
+          <div class="nav-logo-sub">Verification Portal</div>
         </div>
       </a>
 
       <div class="nav-links" id="navLinks">
-        <a href="#verify" class="nav-link">Verify Invoice</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="#about" class="nav-link">About</a>
-        <a href="about.html" class="nav-link" style="color:#f59e0b;font-weight:700">SHIRWAN IT</a>
+        <a href="#home" class="nav-link nav-link-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Home
+        </a>
+        <a href="#internet" class="nav-link nav-link-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Internet
+        </a>
+        <a href="#solar" class="nav-link nav-link-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          Solar
+        </a>
+        <a href="#camera" class="nav-link nav-link-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Camera
+        </a>
+        <a href="#about" class="nav-link nav-link-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          About Us
+        </a>
+        <a href="#contact" class="nav-link nav-link-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact Us
+        </a>
+
         <div class="lang-switcher">
           <button onclick="setLang('en')" class="lang-btn active" id="btn-en">EN</button>
           <button onclick="setLang('ar')" class="lang-btn" id="btn-ar">عر</button>
           <button onclick="setLang('ku')" class="lang-btn" id="btn-ku">کو</button>
         </div>
+
+        <!-- Auth button — changes based on login state -->
+        <button class="nav-login-btn" id="navAuthBtn" onclick="handleAuthClick()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="navAuthLabel">Login</span>
+        </button>
       </div>
 
       <button class="nav-burger" id="navBurger" onclick="toggleNav()" aria-label="Menu">
@@ -70,25 +138,34 @@
     <div class="container hero-content">
       <div class="hero-badge" data-i18n="hero.badge">🔒 Secure Document Verification</div>
       <h1 class="hero-title" data-i18n="hero.title">
-        Verify Invoice<br /><span class="gradient-text">Authenticity</span>
+        Verify Invoice <span class="gradient-text">Authenticity</span>
       </h1>
       <p class="hero-desc" data-i18n="hero.desc">
-        Instantly verify any invoice or document issued by Loan Management Pro.
+        Instantly verify any invoice issued by Loan Management Pro.
         Scan the QR code or enter the invoice number to confirm it's genuine.
       </p>
       <div class="hero-actions">
-        <a href="#verify" class="btn-primary-lg" data-i18n="hero.cta">
+        <a href="#verify" class="btn-primary-lg">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
-          Verify Now
+          <span data-i18n="hero.cta">Verify Now</span>
         </a>
-        <a href="#how-it-works" class="btn-ghost-lg" data-i18n="hero.learn">Learn How →</a>
+        <a href="#about" class="btn-ghost-lg" data-i18n="hero.learn">Learn How →</a>
       </div>
       <div class="hero-stats">
-        <div class="hero-stat"><span class="stat-num" id="statInvoices">—</span><span data-i18n="stats.verified">Invoices Verified</span></div>
+        <div class="hero-stat">
+          <span class="stat-num" id="statInvoices">100+</span>
+          <span data-i18n="stats.verified">Invoices Verified</span>
+        </div>
         <div class="hero-stat-divider"></div>
-        <div class="hero-stat"><span class="stat-num">100%</span><span data-i18n="stats.secure">Secure</span></div>
+        <div class="hero-stat">
+          <span class="stat-num">100%</span>
+          <span data-i18n="stats.secure">Secure</span>
+        </div>
         <div class="hero-stat-divider"></div>
-        <div class="hero-stat"><span class="stat-num">Free</span><span data-i18n="stats.free">Always Free</span></div>
+        <div class="hero-stat">
+          <span class="stat-num">Free</span>
+          <span data-i18n="stats.free">Always Free</span>
+        </div>
       </div>
     </div>
   </section>
@@ -121,15 +198,10 @@
             <div class="input-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             </div>
-            <input
-              type="text"
-              id="invoiceInput"
-              class="verify-input"
+            <input type="text" id="invoiceInput" class="verify-input"
               placeholder="INV-PAY-ABC123-XYZ..."
               data-i18n-placeholder="verify.placeholder"
-              autocomplete="off"
-              spellcheck="false"
-            />
+              autocomplete="off" spellcheck="false" />
             <button class="input-clear" id="clearBtn" onclick="clearInput()" style="display:none">✕</button>
           </div>
           <button class="verify-btn" id="verifyBtn" onclick="verifyInvoice()">
@@ -163,37 +235,106 @@
     </div>
   </section>
 
-  <!-- ── HOW IT WORKS ── -->
-  <section class="how-section" id="how-it-works">
+  <!-- ── INTERNET SERVICES ── -->
+  <section class="services-section" id="internet">
     <div class="container">
-      <div class="section-label" data-i18n="how.label">Simple Process</div>
-      <h2 class="section-title" data-i18n="how.title">How Verification Works</h2>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-num">01</div>
-          <div class="step-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <div class="section-label">Internet Services</div>
+      <h2 class="section-title">High-Speed Connectivity</h2>
+      <p class="section-desc">Reliable internet solutions for homes and businesses across Kurdistan.</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
           </div>
-          <h3 data-i18n="how.step1Title">Receive Invoice</h3>
-          <p data-i18n="how.step1Desc">Get your invoice from Loan Management Pro. Every invoice has a unique QR code and invoice number at the bottom.</p>
+          <h3>Home Broadband</h3>
+          <p>Fast, stable home internet with unlimited data and 24/7 support.</p>
+          <div class="service-tag">From 10 Mbps</div>
         </div>
-        <div class="step-arrow">→</div>
-        <div class="step-card">
-          <div class="step-num">02</div>
-          <div class="step-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
-          <h3 data-i18n="how.step2Title">Scan or Enter Code</h3>
-          <p data-i18n="how.step2Desc">Scan the QR code with your phone camera, or manually type the invoice number into the field above.</p>
+          <h3>Business Fibre</h3>
+          <p>Enterprise-grade fibre connections with SLA guarantees and dedicated support.</p>
+          <div class="service-tag">Up to 1 Gbps</div>
         </div>
-        <div class="step-arrow">→</div>
-        <div class="step-card">
-          <div class="step-num">03</div>
-          <div class="step-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
           </div>
-          <h3 data-i18n="how.step3Title">Instant Result</h3>
-          <p data-i18n="how.step3Desc">We check our secure database in real time and show you full invoice details — customer, amount, date, and status.</p>
+          <h3>Network Setup</h3>
+          <p>Professional installation, routing, and network configuration for your premises.</p>
+          <div class="service-tag">Full setup included</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOLAR SERVICES ── -->
+  <section class="services-section alt-bg" id="solar">
+    <div class="container">
+      <div class="section-label">Solar Energy</div>
+      <h2 class="section-title">Clean Power Solutions</h2>
+      <p class="section-desc">Solar panel systems for homes and businesses — reduce your electricity bill and help the environment.</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+          </div>
+          <h3>Residential Solar</h3>
+          <p>Rooftop solar panels designed for homes, with full installation and warranty.</p>
+          <div class="service-tag">3 kW – 20 kW</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#16a34a,#22c55e)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M3 21h18M5 21V7l8-4 8 4v14M9 21V13h6v8"/></svg>
+          </div>
+          <h3>Commercial Solar</h3>
+          <p>Large-scale solar systems for businesses, factories, and commercial properties.</p>
+          <div class="service-tag">20 kW – 500 kW</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#be185d,#ec4899)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3>Battery Storage</h3>
+          <p>Store excess solar energy with battery backup systems for reliable 24/7 power.</p>
+          <div class="service-tag">Backup power</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CAMERA / SECURITY ── -->
+  <section class="services-section" id="camera">
+    <div class="container">
+      <div class="section-label">Security Camera Systems</div>
+      <h2 class="section-title">Protect What Matters</h2>
+      <p class="section-desc">Professional CCTV and IP camera installations for homes, shops, and offices.</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          <h3>CCTV Systems</h3>
+          <p>HD CCTV cameras with night vision, motion detection, and remote viewing.</p>
+          <div class="service-tag">1080p / 4K</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#0f766e,#14b8a6)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>IP Cameras</h3>
+          <p>Smart IP cameras with cloud storage, AI detection, and smartphone alerts.</p>
+          <div class="service-tag">Cloud enabled</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon" style="background:linear-gradient(135deg,#92400e,#d97706)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/></svg>
+          </div>
+          <h3>NVR / DVR Setup</h3>
+          <p>Centralised recording systems with large storage and multi-camera management.</p>
+          <div class="service-tag">24/7 recording</div>
         </div>
       </div>
     </div>
@@ -204,33 +345,21 @@
     <div class="container about-grid">
       <div class="about-text">
         <div class="section-label" data-i18n="about.label">About the System</div>
-        <h2 class="section-title" data-i18n="about.title">Built for Trust & Transparency</h2>
+        <h2 class="section-title" data-i18n="about.title">Built for Trust &amp; Transparency</h2>
         <p data-i18n="about.desc1">
           Loan Management Pro is a professional desktop application for managing loans, customers,
           and payments. Every invoice it generates carries a unique verification code linked to our
           secure Firebase database.
         </p>
-        <p data-i18n="about.desc2">
+        <p data-i18n="about.desc2" style="margin-top:12px">
           This public verification portal lets anyone — customers, auditors, or business partners —
           confirm that an invoice is genuine and has not been altered.
         </p>
         <div class="about-features">
-          <div class="about-feature">
-            <div class="feature-check">✓</div>
-            <span data-i18n="about.feat1">Real-time Firebase database lookup</span>
-          </div>
-          <div class="about-feature">
-            <div class="feature-check">✓</div>
-            <span data-i18n="about.feat2">Supports English, Arabic & Kurdish</span>
-          </div>
-          <div class="about-feature">
-            <div class="feature-check">✓</div>
-            <span data-i18n="about.feat3">Works on mobile & desktop</span>
-          </div>
-          <div class="about-feature">
-            <div class="feature-check">✓</div>
-            <span data-i18n="about.feat4">Free forever — no account needed</span>
-          </div>
+          <div class="about-feature"><div class="feature-check">✓</div><span data-i18n="about.feat1">Real-time Firebase database lookup</span></div>
+          <div class="about-feature"><div class="feature-check">✓</div><span data-i18n="about.feat2">Supports English, Arabic &amp; Kurdish</span></div>
+          <div class="about-feature"><div class="feature-check">✓</div><span data-i18n="about.feat3">Works on mobile &amp; desktop</span></div>
+          <div class="about-feature"><div class="feature-check">✓</div><span data-i18n="about.feat4">Free forever — no account needed</span></div>
         </div>
       </div>
       <div class="about-visual">
@@ -244,7 +373,7 @@
           <div class="demo-body">
             <div class="demo-badge verified">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              Verified & Authentic
+              Verified &amp; Authentic
             </div>
             <div class="demo-row"><span>Invoice</span><strong>INV-PAY-A1B2C3-XYZ9</strong></div>
             <div class="demo-row"><span>Customer</span><strong>Ahmed Ali</strong></div>
@@ -252,6 +381,38 @@
             <div class="demo-row"><span>Date</span><strong>18 May 2026</strong></div>
             <div class="demo-row"><span>Status</span><strong class="demo-status">Completed</strong></div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Contact Us</h2>
+      <p class="section-desc">Have questions about your invoice or our services? Reach out to us.</p>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <h3>Email</h3>
+          <a href="mailto:shirwan.it@gmail.com">shirwan.it@gmail.com</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.16 1.2 2 2 0 012.14 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <h3>Phone</h3>
+          <a href="tel:+9647504285314">+964 750 6285314</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3>Location</h3>
+          <span>Duhok, Kurdistan Region, Iraq</span>
         </div>
       </div>
     </div>
@@ -270,19 +431,21 @@
           </svg>
         </div>
         <div>
-          <div class="footer-brand-name">Loan Management Pro</div>
-          <div class="footer-brand-sub">Professional Loan Management System</div>
+          <div class="footer-brand-name">SHIRWAN IT</div>
+          <div class="footer-brand-sub">Professional Company Website</div>
         </div>
       </div>
       <div class="footer-links">
-        <a href="#verify" data-i18n="nav.verify">Verify Invoice</a>
-        <a href="#how-it-works" data-i18n="nav.how">How It Works</a>
-        <a href="#about" data-i18n="nav.about">About</a>
-        <a href="about.html" style="color:#f59e0b;font-weight:600">SHIRWAN IT</a>
-        <a href="mailto:nichervan.essa@outlook.com" data-i18n="nav.contact">Contact</a>
+        <a href="#home">Home</a>
+        <a href="#internet">Internet</a>
+        <a href="#solar">Solar</a>
+        <a href="#camera">Camera</a>
+        <a href="#about" data-i18n="nav.about">About Us</a>
+        <a href="#contact">Contact</a>
+        <a href="mailto:shirwan.it@gmail.com" data-i18n="nav.contact">Email</a>
       </div>
       <div class="footer-copy">
-        © 2025 BlackCode Soft Company LTD — Built with in Kurdistan
+        © 2025 BlackCode Soft Company LTD — Built with ❤️ in Kurdistan
       </div>
     </div>
   </footer>
