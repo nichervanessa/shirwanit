@@ -73,3 +73,6 @@ async function getTotalVerifications() {
     return 0;
   }
 }
+
+// ── Firebase Auth (for staff login) ───────────────────────────────────────
+// firebase.auth() is available via the Firebase Auth compat SDK loaded in index.html
