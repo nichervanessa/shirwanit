@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Loans — Loan Management Pro</title>
+  <meta name="description" content="View your loans, payments, and remaining balance." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Firebase SDK (v9 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="10" width="32" height="22" rx="3" stroke="white" stroke-width="2.5"/>
+            <path d="M4 17h32" stroke="white" stroke-width="2.5"/>
+            <circle cx="10" cy="25" r="2" fill="white"/>
+            <rect x="16" y="23" width="14" height="4" rx="1.5" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <div class="nav-logo-name">Loan Management Pro</div>
+          <div class="nav-logo-sub" data-i18n="nav.verifyPortal">Verification Portal</div>
+        </div>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link" data-i18n="nav.home">Home</a>
+        <a href="my-loans.html" class="nav-link active" data-i18n="nav.myLoans">My Loans</a>
+        <a href="products.html" class="nav-link" data-i18n="nav.products">Products</a>
+        <a href="index.html#about" class="nav-link" data-i18n="nav.about">About</a>
+
+        <div class="lang-switcher">
+          <button onclick="setLang('en')" class="lang-btn active" id="btn-en">EN</button>
+          <button onclick="setLang('ar')" class="lang-btn" id="btn-ar">عر</button>
+          <button onclick="setLang('ku')" class="lang-btn" id="btn-ku">کو</button>
+        </div>
+      </div>
+
+      <button class="nav-burger" id="navBurger" onclick="toggleNav()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-badge" data-i18n="myLoans.badge">💼 Customer Portal</div>
+      <h1 class="page-hero-title" data-i18n="myLoans.title">View Your Loans</h1>
+      <p class="page-hero-desc" data-i18n="myLoans.desc">
+        Enter the email address or phone number you provided when registering. We'll show you all your loans, payments, and remaining balance — instantly.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── LOOKUP CARD ── -->
+  <section class="container" style="max-width: 720px;">
+    <div class="lookup-card" id="lookupCard">
+      <div class="lookup-tabs">
+        <button class="lookup-tab active" id="tab-email" onclick="switchTab('email')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span data-i18n="myLoans.byEmail">By Email</span>
+        </button>
+        <button class="lookup-tab" id="tab-phone" onclick="switchTab('phone')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          <span data-i18n="myLoans.byPhone">By Phone</span>
+        </button>
+      </div>
+
+      <form id="lookupForm" onsubmit="lookup(event)">
+        <div class="form-group" id="emailGroup">
+          <label data-i18n="myLoans.emailLabel">Email Address</label>
+          <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
+        </div>
+        <div class="form-group" id="phoneGroup" style="display:none">
+          <label data-i18n="myLoans.phoneLabel">Phone Number</label>
+          <input type="tel" id="phoneInput" placeholder="+964 750 ..." autocomplete="tel" />
+        </div>
+
+        <button type="submit" class="primary-btn" id="lookupBtn">
+          <span id="lookupBtnText" data-i18n="myLoans.lookupBtn">View My Loans</span>
+          <div class="btn-spinner" id="lookupSpinner" style="display:none"></div>
+        </button>
+
+        <p class="form-note" data-i18n="myLoans.privacyNote">
+          🔒 Only you can see your own loans. Anyone with your email or phone can look up the same data — keep your contact info private.
+        </p>
+      </form>
+    </div>
+
+    <!-- Error / not-found state -->
+    <div class="result-card not-found" id="notFoundCard" style="display:none">
+      <div class="result-icon-wrap not-found">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <h3 data-i18n="myLoans.notFoundTitle">No loans found</h3>
+      <p data-i18n="myLoans.notFoundDesc">We couldn't find any loans matching that contact info. Make sure you're using the same email/phone you gave when you registered.</p>
+      <button class="primary-btn" onclick="resetLookup()">
+        <span data-i18n="myLoans.tryAgain">Try Again</span>
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading-card" id="loadingCard" style="display:none">
+      <div class="big-spinner"></div>
+      <p data-i18n="myLoans.loading">Looking up your loans…</p>
+    </div>
+  </section>
+
+  <!-- ── RESULTS ── -->
+  <section class="container" id="resultsSection" style="display:none">
+
+    <!-- Customer header -->
+    <div class="customer-banner">
+      <div class="customer-avatar-large" id="custInitial">?</div>
+      <div class="customer-info">
+        <h2 id="custName" class="customer-name"></h2>
+        <p id="custContact" class="customer-contact"></p>
+      </div>
+      <button class="ghost-btn" onclick="resetLookup()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span data-i18n="myLoans.switchAccount">Switch Account</span>
+      </button>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="loan-stats-grid">
+      <div class="loan-stat">
+        <div class="loan-stat-icon stat-blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        </div>
+        <div class="loan-stat-body">
+          <div class="loan-stat-label" data-i18n="myLoans.totalLoans">Total Loans</div>
+          <div class="loan-stat-value" id="statTotal">0</div>
+        </div>
+      </div>
+      <div class="loan-stat">
+        <div class="loan-stat-icon stat-amber">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="loan-stat-body">
+          <div class="loan-stat-label" data-i18n="myLoans.borrowed">Total Borrowed</div>
+          <div class="loan-stat-value" id="statBorrowed">$0</div>
+        </div>
+      </div>
+      <div class="loan-stat">
+        <div class="loan-stat-icon stat-green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="loan-stat-body">
+          <div class="loan-stat-label" data-i18n="myLoans.paid">Total Paid</div>
+          <div class="loan-stat-value" id="statPaid">$0</div>
+        </div>
+      </div>
+      <div class="loan-stat">
+        <div class="loan-stat-icon stat-red">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6"/><path d="M12 18v4"/><path d="M4.93 4.93l4.24 4.24"/><path d="M14.83 14.83l4.24 4.24"/><path d="M2 12h6"/><path d="M16 12h6"/></svg>
+        </div>
+        <div class="loan-stat-body">
+          <div class="loan-stat-label" data-i18n="myLoans.remaining">Remaining</div>
+          <div class="loan-stat-value" id="statRemaining">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email reminders toggle -->
+    <div class="reminder-card">
+      <div class="reminder-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      </div>
+      <div class="reminder-body">
+        <div class="reminder-title" data-i18n="myLoans.reminderTitle">Email Payment Reminders</div>
+        <div class="reminder-desc" data-i18n="myLoans.reminderDesc">Get an email 3 days before each payment is due.</div>
+      </div>
+      <label class="toggle-switch-wrap">
+        <input type="checkbox" id="reminderToggle" onchange="toggleReminders(this.checked)" />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <!-- Loans list -->
+    <div class="loans-list" id="loansList"></div>
+
+    <!-- Empty state inside results -->
+    <div class="empty-loans" id="emptyLoans" style="display:none">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      <p data-i18n="myLoans.emptyLoans">You have no loans on file yet.</p>
+    </div>
+  </section>
+
+  <!-- ── LOAN DETAIL MODAL ── -->
+  <div class="modal-overlay" id="loanDetailModal">
+    <div class="modal-card modal-large">
+      <button class="modal-close" onclick="closeLoanDetail()">✕</button>
+      <h2 class="modal-title" id="detailLoanTitle"></h2>
+      <p class="modal-sub" id="detailLoanSubtitle"></p>
+
+      <div class="detail-summary">
+        <div class="detail-summary-item">
+          <span class="detail-label" data-i18n="myLoans.loanAmount">Loan Amount</span>
+          <span class="detail-value" id="detailAmount"></span>
+        </div>
+        <div class="detail-summary-item">
+          <span class="detail-label" data-i18n="myLoans.totalPaid">Paid</span>
+          <span class="detail-value text-green" id="detailPaid"></span>
+        </div>
+        <div class="detail-summary-item">
+          <span class="detail-label" data-i18n="myLoans.remaining">Remaining</span>
+          <span class="detail-value text-red" id="detailRemaining"></span>
+        </div>
+        <div class="detail-summary-item">
+          <span class="detail-label" data-i18n="myLoans.monthlyPayment">Monthly</span>
+          <span class="detail-value" id="detailMonthly"></span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h3 data-i18n="myLoans.paymentHistory">Payment History</h3>
+        <div id="detailPayments"></div>
+      </div>
+
+      <div class="detail-section">
+        <h3 data-i18n="myLoans.upcomingPayments">Upcoming Payments</h3>
+        <div id="detailUpcoming"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="ghost-btn" onclick="closeLoanDetail()" data-i18n="myLoans.close">Close</button>
+        <button class="primary-btn" onclick="printStatement()" id="printBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <span data-i18n="myLoans.printStatement">Print Statement</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Loan Management Pro. <span data-i18n="footer.rights">All rights reserved.</span></p>
+    </div>
+  </footer>
+
+  <script src="firebase-config.js"></script>
+  <script src="i18n.js"></script>
+  <script src="my-loans.js"></script>
+</body>
+</html>
