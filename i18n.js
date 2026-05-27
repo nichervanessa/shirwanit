@@ -2,7 +2,7 @@
 
 const TRANSLATIONS = {
   en: {
-    nav: { verify: 'Verify Invoice', how: 'How It Works', about: 'About', contact: 'Contact' },
+    nav: { verify: 'Verify Invoice', how: 'How It Works', about: 'About', contact: 'Contact', home: 'Home', myLoans: 'My Loans', products: 'Products', verifyPortal: 'Verification Portal' },
     hero: {
       badge: '🔒 Secure Document Verification',
       title: 'Verify Invoice <span class="gradient-text">Authenticity</span>',
@@ -65,11 +65,48 @@ const TRANSLATIONS = {
       feat2: 'Supports English, Arabic & Kurdish',
       feat3: 'Works on mobile & desktop',
       feat4: 'Free forever — no account needed'
+    },
+    footer: { rights: 'All rights reserved.' },
+    myLoans: {
+      badge: '💼 Customer Portal',
+      title: 'View Your Loans',
+      desc: 'Enter the email address or phone number you provided when registering. We\'ll show all your loans, payments, and remaining balance instantly.',
+      byEmail: 'By Email', byPhone: 'By Phone',
+      emailLabel: 'Email Address', phoneLabel: 'Phone Number',
+      lookupBtn: 'View My Loans',
+      privacyNote: '🔒 Only you can see your own loans. Keep your contact info private.',
+      notFoundTitle: 'No loans found',
+      notFoundDesc: 'We couldn\'t find any loans matching that contact info. Make sure you\'re using the same email/phone you gave when you registered.',
+      tryAgain: 'Try Again', loading: 'Looking up your loans…',
+      switchAccount: 'Switch Account',
+      totalLoans: 'Total Loans', borrowed: 'Total Borrowed', paid: 'Total Paid', remaining: 'Remaining',
+      reminderTitle: 'Email Payment Reminders',
+      reminderDesc: 'Get an email 3 days before each payment is due.',
+      remindersOn: 'Email reminders enabled.', remindersOff: 'Email reminders disabled.',
+      reminderError: 'Could not save preference.',
+      loanLabel: 'Loan', months: 'months', of: 'of', nextDue: 'Next Due',
+      payments: 'Payments', created: 'Created',
+      status_active: 'Active', status_overdue: 'Overdue', status_paid: 'Paid Off',
+      loanAmount: 'Loan Amount', totalPaid: 'Paid', monthlyPayment: 'Monthly',
+      paymentHistory: 'Payment History', upcomingPayments: 'Upcoming Payments',
+      noPayments: 'No payments yet.', allPaid: 'All payments completed.',
+      overdueLabel: 'OVERDUE', close: 'Close', printStatement: 'Print Statement',
+      emptyLoans: 'You have no loans on file yet.', lookupError: 'Lookup failed. Please try again.'
+    },
+    products: {
+      badge: '🛒 Browse Products', title: 'Our Products',
+      desc: 'Internet equipment, solar systems, and security cameras — quality products with full warranty.',
+      catInternet: 'Internet', catSolar: 'Solar', catCamera: 'Camera',
+      loading: 'Loading products…', empty: 'No products in this category yet.',
+      viewDetails: 'View', price: 'Price',
+      contactHint: '📞 Interested? Contact us to order:',
+      addProduct: 'Add Product', backToList: 'Back to Products',
+      notFound: 'Product not found.'
     }
   },
 
   ar: {
-    nav: { verify: 'التحقق من الفاتورة', how: 'كيف يعمل', about: 'عن النظام', contact: 'اتصل بنا' },
+    nav: { verify: 'التحقق من الفاتورة', how: 'كيف يعمل', about: 'عن النظام', contact: 'اتصل بنا', home: 'الرئيسية', myLoans: 'قروضي', products: 'المنتجات', verifyPortal: 'بوابة التحقق' },
     hero: {
       badge: '🔒 التحقق الآمن من المستندات',
       title: 'تحقق من <span class="gradient-text">صحة الفاتورة</span>',
@@ -132,11 +169,47 @@ const TRANSLATIONS = {
       feat2: 'يدعم العربية والإنجليزية والكردية',
       feat3: 'يعمل على الجوال وسطح المكتب',
       feat4: 'مجاني دائماً — لا حاجة لحساب'
+    },
+    footer: { rights: 'جميع الحقوق محفوظة.' },
+    myLoans: {
+      badge: '💼 بوابة العملاء', title: 'عرض قروضك',
+      desc: 'أدخل البريد الإلكتروني أو رقم الهاتف الذي سجّلت به. سنعرض لك جميع قروضك ومدفوعاتك والرصيد المتبقي فوراً.',
+      byEmail: 'بالبريد الإلكتروني', byPhone: 'برقم الهاتف',
+      emailLabel: 'البريد الإلكتروني', phoneLabel: 'رقم الهاتف',
+      lookupBtn: 'عرض قروضي',
+      privacyNote: '🔒 فقط أنت يمكنك رؤية قروضك. احتفظ ببيانات التواصل الخاصة بك.',
+      notFoundTitle: 'لا توجد قروض',
+      notFoundDesc: 'لم نجد أي قروض بهذه البيانات. تأكد من استخدام نفس البريد أو الهاتف المسجّل.',
+      tryAgain: 'حاول مرة أخرى', loading: 'جارٍ البحث عن قروضك…',
+      switchAccount: 'تغيير الحساب',
+      totalLoans: 'إجمالي القروض', borrowed: 'إجمالي المقترض', paid: 'إجمالي المدفوع', remaining: 'المتبقي',
+      reminderTitle: 'تذكيرات الدفع بالبريد',
+      reminderDesc: 'احصل على بريد إلكتروني قبل 3 أيام من موعد كل دفعة.',
+      remindersOn: 'تم تفعيل التذكيرات.', remindersOff: 'تم إلغاء التذكيرات.',
+      reminderError: 'تعذر حفظ الإعداد.',
+      loanLabel: 'قرض', months: 'أشهر', of: 'من', nextDue: 'الدفعة القادمة',
+      payments: 'الدفعات', created: 'تاريخ الإنشاء',
+      status_active: 'نشط', status_overdue: 'متأخر', status_paid: 'مسدّد',
+      loanAmount: 'مبلغ القرض', totalPaid: 'المدفوع', monthlyPayment: 'الدفعة الشهرية',
+      paymentHistory: 'سجل الدفعات', upcomingPayments: 'الدفعات القادمة',
+      noPayments: 'لا توجد دفعات بعد.', allPaid: 'تمت جميع الدفعات.',
+      overdueLabel: 'متأخر', close: 'إغلاق', printStatement: 'طباعة الكشف',
+      emptyLoans: 'لا توجد قروض مسجّلة بعد.', lookupError: 'فشل البحث. حاول مرة أخرى.'
+    },
+    products: {
+      badge: '🛒 تصفح المنتجات', title: 'منتجاتنا',
+      desc: 'معدات الإنترنت وأنظمة الطاقة الشمسية وكاميرات المراقبة — منتجات عالية الجودة مع ضمان كامل.',
+      catInternet: 'إنترنت', catSolar: 'طاقة شمسية', catCamera: 'كاميرات',
+      loading: 'جارٍ تحميل المنتجات…', empty: 'لا توجد منتجات في هذه الفئة بعد.',
+      viewDetails: 'عرض', price: 'السعر',
+      contactHint: '📞 مهتم؟ تواصل معنا للطلب:',
+      addProduct: 'إضافة منتج', backToList: 'العودة للمنتجات',
+      notFound: 'المنتج غير موجود.'
     }
   },
 
   ku: {
-    nav: { verify: 'پشتڕاستکردنەوەی پسوڵە', how: 'چۆن کار دەکات', about: 'دەربارە', contact: 'پەیوەندی' },
+    nav: { verify: 'پشتڕاستکردنەوەی پسوڵە', how: 'چۆن کار دەکات', about: 'دەربارە', contact: 'پەیوەندی', home: 'سەرەکی', myLoans: 'قەرزەکانم', products: 'بەرهەمەکان', verifyPortal: 'دەرگای پشتڕاستکردنەوە' },
     hero: {
       badge: '🔒 پشتڕاستکردنەوەی بەڵگەنامەی ئاسایشی',
       title: 'پشتڕاستکردنەوەی <span class="gradient-text">ڕاستی پسوڵە</span>',
@@ -194,11 +267,47 @@ const TRANSLATIONS = {
       label: 'دەربارەی سیستەمەکە',
       title: 'دروستکراوە بۆ متمانە و ئاڵوگۆڕی ئاشکرا',
       desc1: 'سیستەمی بەڕێوەبردنی قەرز بەرنامەیەکی ئەسایشی سەر مەیزەیە بۆ بەڕێوەبردنی قەرزەکان، کڕیارەکان و پارەدانەکان.',
-      desc2: 'ئەم دەرگایە گشتییە بۆ پشتڕاستکردنەوە ئەیبەخشێت بە هەر کەسێک پشتڕاست بکاتەوە کە پسوڵەکە ڕاستە و دەستکاری نەکراوە.',
+      desc2: 'ئەم دەرگایە گشتییە بۆ پشتڕاستکردنەوە ئەیبەخشێت بە هەر کەسێک پشتڕاست بکاتەوە کە پسوڵەکە ڕاستە.',
       feat1: 'گەڕانی فۆری لە بنکەدراوی Firebase',
       feat2: 'پشتگیری ئینگلیزی، عەرەبی و کوردی',
       feat3: 'لەسەر مۆبایل و سەرمەیزیش کار دەکات',
       feat4: 'هەمیشە خۆڕایی — هیچ هەژمارێک پێویست نییە'
+    },
+    footer: { rights: 'هەموو مافەکان پارێزراون.' },
+    myLoans: {
+      badge: '💼 دەرگای کڕیار', title: 'قەرزەکانت ببینە',
+      desc: 'ئیمەیڵ یان ژمارەی تەلەفۆنی تۆمارکراوت بنووسە. هەموو قەرزەکانت، پارەدانەکانت و باقیەکەت بە فۆری نیشانت دەدەین.',
+      byEmail: 'بە ئیمەیڵ', byPhone: 'بە تەلەفۆن',
+      emailLabel: 'ئیمەیڵ', phoneLabel: 'ژمارەی تەلەفۆن',
+      lookupBtn: 'قەرزەکانم ببینە',
+      privacyNote: '🔒 تەنها تۆ دەتوانیت قەرزەکانت ببینیت. زانیاری پەیوەندیت بنێ.',
+      notFoundTitle: 'هیچ قەرزێک نەدۆزرایەوە',
+      notFoundDesc: 'هیچ قەرزێک بەم زانیارییەوە نەدۆزرایەوە. دڵنیابە لەوەی هەمان ئیمەیڵ یان تەلەفۆنی تۆمارکراوت بەکاردەهێنیت.',
+      tryAgain: 'دووبارە هەوڵبدە', loading: 'قەرزەکانت دەگەڕێین…',
+      switchAccount: 'گۆڕینی هەژمار',
+      totalLoans: 'کۆی قەرزەکان', borrowed: 'کۆی قەرزگیراو', paid: 'کۆی پارەدراو', remaining: 'ماوە',
+      reminderTitle: 'یادکردنەوەی پارەدان بە ئیمەیڵ',
+      reminderDesc: '٣ ڕۆژ پێش کاتی پارەدان ئیمەیڵت دێتێ.',
+      remindersOn: 'یادکردنەوەکان چالاک کراون.', remindersOff: 'یادکردنەوەکان ناچالاک کراون.',
+      reminderError: 'نەتوانرا ئەنجامەکە پاشەکەوت بکات.',
+      loanLabel: 'قەرز', months: 'مانگ', of: 'لە', nextDue: 'پارەدانی داهاتوو',
+      payments: 'پارەدانەکان', created: 'ڕۆژی دروستکردن',
+      status_active: 'چالاک', status_overdue: 'دواکەوتوو', status_paid: 'تەواوبووە',
+      loanAmount: 'بڕی قەرز', totalPaid: 'پارەدراو', monthlyPayment: 'پارەدانی مانگانە',
+      paymentHistory: 'مێژووی پارەدان', upcomingPayments: 'پارەدانەکانی داهاتوو',
+      noPayments: 'هێشتا هیچ پارەدانێک نییە.', allPaid: 'هەموو پارەدانەکان تەواو بوون.',
+      overdueLabel: 'دواکەوتوو', close: 'داخستن', printStatement: 'چاپکردنی کشتی',
+      emptyLoans: 'هێشتا هیچ قەرزێک تۆمار نەکراوە.', lookupError: 'گەڕان سەرنەکەوت. دووبارە هەوڵبدە.'
+    },
+    products: {
+      badge: '🛒 بەرهەمەکان ببینە', title: 'بەرهەمەکانمان',
+      desc: 'ئامێری ئینتەرنێت، سیستەمی خۆرئەنەرژی، و کامێرای ئاسایش — بەرهەمی بەرزکوالێتی بە گەرەنتیی تەواو.',
+      catInternet: 'ئینتەرنێت', catSolar: 'خۆرئەنەرژی', catCamera: 'کامێرا',
+      loading: 'بەرهەمەکان بارئەکرێن…', empty: 'هێشتا هیچ بەرهەمێک لەم پۆلێنەدا نییە.',
+      viewDetails: 'بینین', price: 'نرخ',
+      contactHint: '📞 حازر بیت؟ پەیوەندیمان پێوەبکە بۆ داواکردن:',
+      addProduct: 'بەرهەم زیادبکە', backToList: 'گەڕانەوە بۆ بەرهەمەکان',
+      notFound: 'بەرهەمەکە نەدۆزرایەوە.'
     }
   }
 };
