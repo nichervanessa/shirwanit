@@ -314,7 +314,9 @@ async function loadAdminProducts() {
   const loading = document.getElementById('loadingAdminList');
   loading.style.display = 'flex';
   try {
-    const snap = await db.collection('products').get();
+    const snap = await db.collection('products')
+      .where('createdBy', '==', currentUser.uid)
+      .get();
     const products = [];
     snap.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
     // Sort newest first in JS (avoids needing a Firestore composite index)
