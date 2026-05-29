@@ -66,7 +66,37 @@ const TRANSLATIONS = {
       feat3: 'Works on mobile & desktop',
       feat4: 'Free forever — no account needed'
     },
-    footer: { rights: 'All rights reserved.' },
+    footer: { rights: 'All rights reserved.', homeLink: 'Home', internetLink: 'Internet', solarLink: 'Solar', cameraLink: 'Camera', aboutLink: 'About Us', contactLink: 'Contact', emailLink: 'Email' },
+    internet: {
+      label: 'Internet Services',
+      title: 'High-Speed Connectivity',
+      desc: 'Reliable internet solutions for homes and businesses across Kurdistan.',
+      card1Title: 'Home Broadband', card1Desc: 'Fast, stable home internet with unlimited data and 24/7 support.', card1Tag: 'From 10 Mbps',
+      card2Title: 'Business Fibre', card2Desc: 'Enterprise-grade fibre connections with SLA guarantees and dedicated support.', card2Tag: 'Up to 1 Gbps',
+      card3Title: 'Network Setup', card3Desc: 'Professional installation, routing, and network configuration for your premises.', card3Tag: 'Full setup included'
+    },
+    solar: {
+      label: 'Solar Energy',
+      title: 'Clean Power Solutions',
+      desc: 'Solar panel systems for homes and businesses — reduce your electricity bill and help the environment.',
+      card1Title: 'Residential Solar', card1Desc: 'Rooftop solar panels designed for homes, with full installation and warranty.', card1Tag: '3 kW – 20 kW',
+      card2Title: 'Commercial Solar', card2Desc: 'Large-scale solar systems for businesses, factories, and commercial properties.', card2Tag: '20 kW – 500 kW',
+      card3Title: 'Battery Storage', card3Desc: 'Store excess solar energy with battery backup systems for reliable 24/7 power.', card3Tag: 'Backup power'
+    },
+    cameraSection: {
+      label: 'Security Camera Systems',
+      title: 'Protect What Matters',
+      desc: 'Professional CCTV and IP camera installations for homes, shops, and offices.',
+      card1Title: 'CCTV Systems', card1Desc: 'HD CCTV cameras with night vision, motion detection, and remote viewing.', card1Tag: '1080p / 4K',
+      card2Title: 'IP Cameras', card2Desc: 'Smart IP cameras with cloud storage, AI detection, and smartphone alerts.', card2Tag: 'Cloud enabled',
+      card3Title: 'NVR / DVR Setup', card3Desc: 'Centralised recording systems with large storage and multi-camera management.', card3Tag: '24/7 recording'
+    },
+    contact: {
+      label: 'Get In Touch',
+      title: 'Contact Us',
+      desc: 'Have questions about your invoice or our services? Reach out to us.',
+      emailLabel: 'Email', phoneLabel: 'Phone', locationLabel: 'Location', locationValue: 'Duhok, Kurdistan Region, Iraq'
+    },
     myLoans: {
       badge: '💼 Customer Portal',
       title: 'View Your Loans',
@@ -102,6 +132,33 @@ const TRANSLATIONS = {
       contactHint: '📞 Interested? Contact us to order:',
       addProduct: 'Add Product', backToList: 'Back to Products',
       notFound: 'Product not found.'
+    },
+    admin: {
+      loginTitle: 'Admin Login', loginSub: 'You must be signed in to manage products.',
+      signIn: 'Sign In', signOut: 'Sign Out',
+      emailLabel: 'Email', passwordLabel: 'Password',
+      backToProducts: '← Back to Products', viewProducts: '← View Products',
+      tokenTitle: '🔑 GitHub Token (required for image uploads)',
+      tokenDesc: 'Images are saved to the gallery/ folder on GitHub via the API. Your token is stored only in this browser.',
+      tokenLabel: 'Personal Access Token', saveToken: 'Save Token',
+      formTitleAdd: 'Add New Product', formTitleEdit: 'Edit Product',
+      nameLabel: 'Product Name', namePlaceholder: 'e.g. TP-Link Wireless Router AC1200',
+      categoryLabel: 'Category',
+      priceLabel: 'Price (number only)', pricePlaceholder: 'e.g. 75000',
+      shortDescLabel: 'Short Description', shortDescPlaceholder: 'One-line summary shown on the card',
+      fullDescLabel: 'Full Description', fullDescPlaceholder: 'Full product details, specs, warranty info…',
+      publishLabel: 'Publish immediately (visible to public)',
+      imagesLabel: 'Product Images (max 10)',
+      dropText: 'Click or drag images here', dropSub: 'JPG, PNG, WebP · Max 5 MB each',
+      saveProduct: 'Save Product', updateProduct: 'Update Product',
+      cancel: 'Cancel / Reset',
+      existingProducts: 'Existing Products', allCat: 'All',
+      editBtn: 'Edit', deleteBtn: 'Delete', noProducts: 'No products yet.',
+      checkingAuth: 'Checking authentication…',
+      imgbbTitle: '🖼️ Image Hosting Config (ImgBB)',
+      imgbbDesc: 'Free image hosting. Setup: create free account at imgbb.com → go to api.imgbb.com → click "Get API key" → copy and paste it below.',
+      imgbbKeyLabel: 'ImgBB API Key',
+      saveConfig: 'Save Config'
     }
   },
 
@@ -170,7 +227,37 @@ const TRANSLATIONS = {
       feat3: 'يعمل على الجوال وسطح المكتب',
       feat4: 'مجاني دائماً — لا حاجة لحساب'
     },
-    footer: { rights: 'جميع الحقوق محفوظة.' },
+    footer: { rights: 'جميع الحقوق محفوظة.', homeLink: 'الرئيسية', internetLink: 'إنترنت', solarLink: 'طاقة شمسية', cameraLink: 'كاميرا', aboutLink: 'عننا', contactLink: 'اتصل بنا', emailLink: 'بريد' },
+    internet: {
+      label: 'خدمات الإنترنت',
+      title: 'اتصال عالي السرعة',
+      desc: 'حلول إنترنت موثوقة للمنازل والشركات في كردستان.',
+      card1Title: 'الإنترنت المنزلي', card1Desc: 'إنترنت منزلي سريع ومستقر مع بيانات غير محدودة ودعم على مدار الساعة.', card1Tag: 'من 10 ميغابت',
+      card2Title: 'ألياف الأعمال', card2Desc: 'اتصالات ألياف بمستوى المؤسسات مع ضمانات SLA ودعم مخصص.', card2Tag: 'حتى 1 جيجابت',
+      card3Title: 'إعداد الشبكة', card3Desc: 'تركيب وتوجيه وتكوين شبكة احترافي لمبانيك.', card3Tag: 'الإعداد الكامل مشمول'
+    },
+    solar: {
+      label: 'الطاقة الشمسية',
+      title: 'حلول الطاقة النظيفة',
+      desc: 'أنظمة الألواح الشمسية للمنازل والشركات — قلل فاتورة الكهرباء وساعد البيئة.',
+      card1Title: 'الطاقة الشمسية المنزلية', card1Desc: 'ألواح شمسية على الأسطح مصممة للمنازل مع تركيب كامل وضمان.', card1Tag: '3 كيلوواط – 20 كيلوواط',
+      card2Title: 'الطاقة الشمسية التجارية', card2Desc: 'أنظمة شمسية واسعة النطاق للشركات والمصانع والعقارات التجارية.', card2Tag: '20 كيلوواط – 500 كيلوواط',
+      card3Title: 'تخزين البطاريات', card3Desc: 'خزن الطاقة الشمسية الزائدة بأنظمة احتياطية للبطاريات للحصول على طاقة موثوقة.', card3Tag: 'طاقة احتياطية'
+    },
+    cameraSection: {
+      label: 'أنظمة كاميرات المراقبة',
+      title: 'احمِ ما يهمك',
+      desc: 'تركيب كاميرات CCTV وIP احترافي للمنازل والمحلات والمكاتب.',
+      card1Title: 'أنظمة CCTV', card1Desc: 'كاميرات CCTV عالية الدقة مع رؤية ليلية وكشف الحركة والمشاهدة عن بُعد.', card1Tag: '1080p / 4K',
+      card2Title: 'كاميرات IP', card2Desc: 'كاميرات IP ذكية مع تخزين سحابي وكشف بالذكاء الاصطناعي وتنبيهات الهاتف.', card2Tag: 'مدعومة سحابياً',
+      card3Title: 'إعداد NVR / DVR', card3Desc: 'أنظمة تسجيل مركزية مع تخزين كبير وإدارة متعددة الكاميرات.', card3Tag: 'تسجيل 24/7'
+    },
+    contact: {
+      label: 'تواصل معنا',
+      title: 'اتصل بنا',
+      desc: 'هل لديك أسئلة حول فاتورتك أو خدماتنا؟ تواصل معنا.',
+      emailLabel: 'بريد إلكتروني', phoneLabel: 'هاتف', locationLabel: 'الموقع', locationValue: 'دهوك، إقليم كردستان، العراق'
+    },
     myLoans: {
       badge: '💼 بوابة العملاء', title: 'عرض قروضك',
       desc: 'أدخل البريد الإلكتروني أو رقم الهاتف الذي سجّلت به. سنعرض لك جميع قروضك ومدفوعاتك والرصيد المتبقي فوراً.',
@@ -205,6 +292,33 @@ const TRANSLATIONS = {
       contactHint: '📞 مهتم؟ تواصل معنا للطلب:',
       addProduct: 'إضافة منتج', backToList: 'العودة للمنتجات',
       notFound: 'المنتج غير موجود.'
+    },
+    admin: {
+      loginTitle: 'تسجيل دخول المسؤول', loginSub: 'يجب تسجيل الدخول لإدارة المنتجات.',
+      signIn: 'تسجيل الدخول', signOut: 'تسجيل الخروج',
+      emailLabel: 'البريد الإلكتروني', passwordLabel: 'كلمة المرور',
+      backToProducts: '← العودة للمنتجات', viewProducts: '← عرض المنتجات',
+      tokenTitle: '🔑 رمز GitHub (مطلوب لرفع الصور)',
+      tokenDesc: 'يتم حفظ الصور في مجلد gallery/ على GitHub عبر الـ API. يُحفظ رمزك في هذا المتصفح فقط.',
+      tokenLabel: 'رمز الوصول الشخصي', saveToken: 'حفظ الرمز',
+      formTitleAdd: 'إضافة منتج جديد', formTitleEdit: 'تعديل المنتج',
+      nameLabel: 'اسم المنتج', namePlaceholder: 'مثال: روتر TP-Link AC1200',
+      categoryLabel: 'الفئة',
+      priceLabel: 'السعر (أرقام فقط)', pricePlaceholder: 'مثال: 75000',
+      shortDescLabel: 'وصف قصير', shortDescPlaceholder: 'ملخص سطر واحد يظهر على البطاقة',
+      fullDescLabel: 'وصف كامل', fullDescPlaceholder: 'تفاصيل المنتج الكاملة، المواصفات، معلومات الضمان…',
+      publishLabel: 'نشر فوراً (مرئي للعموم)',
+      imagesLabel: 'صور المنتج (حتى 10)',
+      dropText: 'انقر أو اسحب الصور هنا', dropSub: 'JPG، PNG، WebP · حد أقصى 5 ميغابايت لكل صورة',
+      saveProduct: 'حفظ المنتج', updateProduct: 'تحديث المنتج',
+      cancel: 'إلغاء / إعادة تعيين',
+      existingProducts: 'المنتجات الحالية', allCat: 'الكل',
+      editBtn: 'تعديل', deleteBtn: 'حذف', noProducts: 'لا توجد منتجات بعد.',
+      checkingAuth: 'جارٍ التحقق من المصادقة…',
+      imgbbTitle: '🖼️ إعداد استضافة الصور (ImgBB)',
+      imgbbDesc: 'استضافة صور مجانية. الإعداد: أنشئ حساباً مجانياً في imgbb.com ← اذهب إلى api.imgbb.com ← انقر على "Get API key" ← انسخ والصق أدناه.',
+      imgbbKeyLabel: 'مفتاح API لـ ImgBB',
+      saveConfig: 'حفظ الإعداد'
     }
   },
 
@@ -273,7 +387,37 @@ const TRANSLATIONS = {
       feat3: 'لەسەر مۆبایل و سەرمەیزیش کار دەکات',
       feat4: 'هەمیشە خۆڕایی — هیچ هەژمارێک پێویست نییە'
     },
-    footer: { rights: 'هەموو مافەکان پارێزراون.' },
+    footer: { rights: 'هەموو مافەکان پارێزراون.', homeLink: 'سەرەکی', internetLink: 'ئینتەرنێت', solarLink: 'خۆرئەنەرژی', cameraLink: 'کامێرا', aboutLink: 'دەربارەمان', contactLink: 'پەیوەندی', emailLink: 'ئیمەیڵ' },
+    internet: {
+      label: 'خزمەتگوزاری ئینتەرنێت',
+      title: 'پەیوەندیی بەرزخێرا',
+      desc: 'چارەسەری ئینتەرنێتی متمانەپێکراو بۆ ماڵەکان و کارووبارەکان لە کوردستان.',
+      card1Title: 'ئینتەرنێتی ماڵەوە', card1Desc: 'ئینتەرنێتی ماڵەوەی خێرا و جێگیر بە داتای نامحدود و پشتگیری ٢٤/٧.', card1Tag: 'لە ١٠ مێگابت',
+      card2Title: 'فایبەری کار و کاسبی', card2Desc: 'پەیوەندی فایبەری ئاستی پرۆژەیی بە گەرەنتی SLA و پشتگیری تایبەت.', card2Tag: 'تا ١ گیگابت',
+      card3Title: 'ڕێکخستنی تۆڕ', card3Desc: 'دامەزراندن و ڕووتینگ و ڕێکخستنی تۆڕی پیشەیی بۆ بینای تۆ.', card3Tag: 'ڕێکخستنی تەواو دەگیرێتەبەر'
+    },
+    solar: {
+      label: 'وزەی خۆر',
+      title: 'چارەسەری وزەی پاک',
+      desc: 'سیستەمی پانێلی خۆر بۆ ماڵەکان و کارووبارەکان — فاتووری کارەباکەت کەم بکەرەوە و یارمەتی ژینگەدە.',
+      card1Title: 'خۆرئەنەرژی ماڵانە', card1Desc: 'پانێلی خۆری سەر بام دیزاینکراوە بۆ ماڵەکان بە دامەزراندنی تەواو و گەرەنتی.', card1Tag: '٣ کیلۆوات – ٢٠ کیلۆوات',
+      card2Title: 'خۆرئەنەرژی بازرگانی', card2Desc: 'سیستەمی خۆرئەنەرژی فراوان بۆ کارووبار، کارخانەکان و خانووەکانی بازرگانی.', card2Tag: '٢٠ کیلۆوات – ٥٠٠ کیلۆوات',
+      card3Title: 'هەڵگرتنی باتری', card3Desc: 'وزەی خۆری زیادە هەڵبگرە بە سیستەمی باتری احتیاتی بۆ وزەیەکی متمانەپێکراو.', card3Tag: 'وزەی احتیاتی'
+    },
+    cameraSection: {
+      label: 'سیستەمی کامێرای ئاسایش',
+      title: 'لەئەوەی گرنگتە پاراستن بکە',
+      desc: 'دامەزراندنی کامێرای CCTV و IP پیشەیی بۆ ماڵەکان، دوکانەکان و ئۆفیسەکان.',
+      card1Title: 'سیستەمی CCTV', card1Desc: 'کامێرای CCTV HD بە دیدنی شەو، کتەپرسین بۆ جووڵەکردن، و بینینی لە دوور.', card1Tag: '1080p / 4K',
+      card2Title: 'کامێرای IP', card2Desc: 'کامێرای IP زیرەک بە هەڵگرتنی هەور، کتەپرسینی AI، و ئاگادارکردنەوەی مۆبایل.', card2Tag: 'هەور چالاکە',
+      card3Title: 'ڕێکخستنی NVR / DVR', card3Desc: 'سیستەمی تۆمارکردنی ناوەندی بە هەڵگرتنی زۆر و بەڕێوەبردنی کامێرای پردار.', card3Tag: 'تۆمارکردنی ٢٤/٧'
+    },
+    contact: {
+      label: 'پەیوەندیمان پێوەبکە',
+      title: 'پەیوەندی',
+      desc: 'پرسیارت هەیە دەربارەی پسوڵەکەت یان خزمەتگوزاریەکانمان؟ پەیوەندیمان پێوەبکە.',
+      emailLabel: 'ئیمەیڵ', phoneLabel: 'تەلەفۆن', locationLabel: 'شوێن', locationValue: 'دهوک، هەرێمی کوردستان، عێراق'
+    },
     myLoans: {
       badge: '💼 دەرگای کڕیار', title: 'قەرزەکانت ببینە',
       desc: 'ئیمەیڵ یان ژمارەی تەلەفۆنی تۆمارکراوت بنووسە. هەموو قەرزەکانت، پارەدانەکانت و باقیەکەت بە فۆری نیشانت دەدەین.',
@@ -308,6 +452,33 @@ const TRANSLATIONS = {
       contactHint: '📞 حازر بیت؟ پەیوەندیمان پێوەبکە بۆ داواکردن:',
       addProduct: 'بەرهەم زیادبکە', backToList: 'گەڕانەوە بۆ بەرهەمەکان',
       notFound: 'بەرهەمەکە نەدۆزرایەوە.'
+    },
+    admin: {
+      loginTitle: 'چوونەژوورەوەی بەڕێوەبەر', loginSub: 'دەبێت بچیتە ژوورەوە بۆ بەڕێوەبردنی بەرهەمەکان.',
+      signIn: 'چوونەژوورەوە', signOut: 'چوونەدەرەوە',
+      emailLabel: 'ئیمەیڵ', passwordLabel: 'وشەی نهێنی',
+      backToProducts: '← گەڕانەوە بۆ بەرهەمەکان', viewProducts: '← بینینی بەرهەمەکان',
+      tokenTitle: '🔑 GitHub Token (پێویستە بۆ بارکردنی وێنە)',
+      tokenDesc: 'وێنەکان لە مجلد gallery/ لەسەر GitHub پاشەکەوت دەکرێن. نیشانەکەت تەنها لەم براوزەرەدا پاشەکەوت دەکرێت.',
+      tokenLabel: 'نیشانەی دەستڕاگەیشتنی کەسی', saveToken: 'پاشەکەوتکردنی نیشانە',
+      formTitleAdd: 'بەرهەمی نوێ زیادبکە', formTitleEdit: 'بەرهەم دەستکاری بکە',
+      nameLabel: 'ناوی بەرهەم', namePlaceholder: 'نموونە: TP-Link Router AC1200',
+      categoryLabel: 'پۆل',
+      priceLabel: 'نرخ (ژمارە تەنها)', pricePlaceholder: 'نموونە: 75000',
+      shortDescLabel: 'پێناسەی کورت', shortDescPlaceholder: 'کورتەیەک کە لەسەر کارتەکەدا دەردەکەوێت',
+      fullDescLabel: 'پێناسەی تەواو', fullDescPlaceholder: 'وردەکاری تەواوی بەرهەم، تایبەتمەندییەکان، زانیاری گەرەنتی…',
+      publishLabel: 'بە فۆری بڵاوبکەرەوە (بۆ گشت دیارە)',
+      imagesLabel: 'وێنەی بەرهەم (زۆرترین ١٠)',
+      dropText: 'کلیک بکە یان وێنەکان ئێرەبکێشە', dropSub: 'JPG، PNG، WebP · زۆرترین ٥ مێگابایت بۆ هەر وێنەیەک',
+      saveProduct: 'بەرهەم پاشەکەوت بکە', updateProduct: 'بەرهەم نوێ بکەرەوە',
+      cancel: 'ڕەتکردنەوە / ڕیسێت',
+      existingProducts: 'بەرهەمە ئێستاکانی', allCat: 'هەموو',
+      editBtn: 'دەستکاری', deleteBtn: 'سڕینەوە', noProducts: 'هێشتا هیچ بەرهەمێک نییە.',
+      checkingAuth: 'پشکنینی ناسنامە…',
+      imgbbTitle: '🖼️ ڕێکخستنی ئەستێنی وێنە (ImgBB)',
+      imgbbDesc: 'ئەستێنی وێنەی بەخۆڕایی. ڕێکخستن: ئەکاونتی بەخۆڕایی دروست بکە لە imgbb.com ← بڕۆ بۆ api.imgbb.com ← کلیک بکە لەسەر "Get API key" ← کۆپی بکە و لە خوارەوە بپێچێنەوە.',
+      imgbbKeyLabel: 'کلیلی API ی ImgBB',
+      saveConfig: 'پاشەکەوتکردنی ڕێکخستن'
     }
   }
 };
