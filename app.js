@@ -250,10 +250,9 @@ async function showResult(result, code) {
     // Increment verification counter (non-blocking)
     if (d.id) recordVerification(d.id);
 
-    // Public info always visible
-    // Staff info: full grid visible; guest: blurred + login prompt
-    const staffGrid = `
-      <div class="result-grid ${!isStaff ? 'staff-only-blur' : ''}">
+    // Full details grid — only visible to logged-in staff
+    const staffGrid = isStaff ? `
+      <div class="result-grid">
         <div class="result-field">
           <label>${t('result.invoice')}</label>
           <span style="font-family:monospace;font-size:12px">${d.invoiceNumber || code}</span>
@@ -282,7 +281,7 @@ async function showResult(result, code) {
         </div>` : ''}
         ${getStatusField(d)}
       </div>
-    `;
+    ` : '';
 
     const staffActions = isStaff ? `
       <div class="result-actions" style="flex-wrap:wrap;gap:8px">
@@ -304,7 +303,7 @@ async function showResult(result, code) {
       </div>
     ` : `
       <div class="staff-unlock-banner">
-        <p>🔐 Staff login required to view full invoice details, print, or download.</p>
+        <p>🔐 This invoice is authentic. Login to view full details, print, or download.</p>
         <button onclick="openLoginModal()">Login to View Full Invoice</button>
       </div>
       <div style="padding:10px 18px 18px">
