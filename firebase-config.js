@@ -1,5 +1,5 @@
 // firebase-config.js
-// Same Firebase project as Loan Management Pro desktop app
+// Same Firebase project as SHIRWAN IT desktop app (Lendvora)
 // Client-side config is safe to be public — it only identifies the project.
 // Security is enforced by Firestore Security Rules (see README).
 
