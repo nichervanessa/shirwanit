@@ -52,7 +52,7 @@ function showNotFound() {
 
 // ─── Render ───────────────────────────────────────────────────────────────
 function renderProduct(p) {
-  document.title = `${p.name || 'Product'} — Loan Management Pro`;
+  document.title = `${p.name || 'Product'} — SHIRWAN IT`;
 
   const images = p.images || [];
   totalSlides   = images.length;
