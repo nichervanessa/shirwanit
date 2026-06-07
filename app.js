@@ -250,7 +250,7 @@ async function showResult(result, code) {
     // Increment verification counter (non-blocking)
     if (d.id) recordVerification(d.id);
 
-    // Full details grid — only visible to logged-in staff
+    // Full details grid — STAFF ONLY (must be logged in)
     const staffGrid = isStaff ? `
       <div class="result-grid">
         <div class="result-field">
@@ -268,7 +268,7 @@ async function showResult(result, code) {
         </div>
         <div class="result-field">
           <label>${t('result.company')}</label>
-          <span>${d.company?.name || 'Loan Management Pro'}</span>
+          <span>${d.company?.name || 'SHIRWAN IT'}</span>
         </div>
         <div class="result-field">
           <label>${t('result.created')}</label>
@@ -280,16 +280,18 @@ async function showResult(result, code) {
           <span>${(d.verificationCount + 1).toLocaleString()}</span>
         </div>` : ''}
         ${getStatusField(d)}
+        ${getExtraFields(d)}
       </div>
     ` : '';
 
+    // Staff gets full actions; public sees only a login prompt
     const staffActions = isStaff ? `
       <div class="result-actions" style="flex-wrap:wrap;gap:8px">
         <button class="result-btn primary" onclick="viewFullInvoice(${JSON.stringify(d).replace(/"/g, '&quot;')})" style="flex:2;min-width:160px">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           View Full Invoice
         </button>
-        <button class="result-btn primary" onclick="printFullInvoice(${JSON.stringify(d).replace(/"/g, '&quot;')})" style="flex:1;min-width:120px;background:#0f766e">
+        <button class="result-btn primary" onclick="printFullInvoice(${JSON.stringify(d).replace(/"/g, '&quot;')})" style="flex:1;min-width:120px;background:#059669">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           Print
         </button>
@@ -303,7 +305,7 @@ async function showResult(result, code) {
       </div>
     ` : `
       <div class="staff-unlock-banner">
-        <p>🔐 This invoice is authentic. Login to view full details, print, or download.</p>
+        <p>🔐 This invoice is authentic. Login as staff to view full details, print, or download.</p>
         <button onclick="openLoginModal()">Login to View Full Invoice</button>
       </div>
       <div style="padding:10px 18px 18px">
@@ -321,7 +323,7 @@ async function showResult(result, code) {
           </div>
           <div>
             <div class="result-title">${t('result.verified')}</div>
-            <div class="result-subtitle">${t('result.verifiedSub')} <strong>${d.company?.name || 'Loan Management Pro'}</strong></div>
+            <div class="result-subtitle">${t('result.verifiedSub')} <strong>${d.company?.name || 'SHIRWAN IT'}</strong></div>
           </div>
           <div style="margin-left:auto">
             <span class="type-badge ${typeBadgeClass}">${typeLabel}</span>
@@ -366,6 +368,44 @@ async function showResult(result, code) {
   area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+
+// ── Extra type-specific fields for the result grid ─────────────────────────
+function getExtraFields(d) {
+  const sd = d.data || {};
+  const fmtN = n => Number(n||0).toLocaleString();
+
+  if (d.type === 'payment') {
+    return `
+      ${sd.method ? `<div class="result-field"><label>Payment Method</label><span>${sd.method}</span></div>` : ''}
+      ${sd.loanId ? `<div class="result-field"><label>Loan Reference</label><span style="font-family:monospace;font-size:12px">${sd.loanId}</span></div>` : ''}
+    `;
+  }
+  if (d.type === 'loan') {
+    return `
+      ${sd.monthlyPayment ? `<div class="result-field"><label>Monthly Payment</label><span style="font-weight:800;color:#4f46e5">${fmtN(sd.monthlyPayment)} IQD</span></div>` : ''}
+      ${sd.duration ? `<div class="result-field"><label>Duration</label><span>${sd.duration} months</span></div>` : ''}
+      ${sd.totalPaid !== undefined ? `<div class="result-field"><label>Total Paid</label><span style="color:#059669;font-weight:700">${fmtN(sd.totalPaid)} IQD</span></div>` : ''}
+      ${sd.remaining !== undefined ? `<div class="result-field"><label>Remaining</label><span style="color:#dc2626;font-weight:700">${fmtN(sd.remaining)} IQD</span></div>` : ''}
+      ${sd.startDate ? `<div class="result-field"><label>Start Date</label><span>${formatDate(sd.startDate)}</span></div>` : ''}
+    `;
+  }
+  if (d.type === 'companyDebt' || d.type === 'debt') {
+    return `
+      ${sd.creditorName ? `<div class="result-field"><label>Creditor</label><span>${sd.creditorName}</span></div>` : ''}
+      ${sd.debtAmount ? `<div class="result-field"><label>Debt Amount</label><span style="color:#dc2626;font-weight:800">${fmtN(sd.debtAmount)} IQD</span></div>` : ''}
+      ${sd.amountPaid !== undefined ? `<div class="result-field"><label>Amount Paid</label><span style="color:#059669;font-weight:700">${fmtN(sd.amountPaid)} IQD</span></div>` : ''}
+      ${sd.remaining !== undefined ? `<div class="result-field"><label>Remaining</label><span style="color:#dc2626;font-weight:700">${fmtN(sd.remaining)} IQD</span></div>` : ''}
+      ${sd.dueDate ? `<div class="result-field"><label>Due Date</label><span>${formatDate(sd.dueDate)}</span></div>` : ''}
+    `;
+  }
+  if (d.type === 'customer') {
+    return `
+      ${sd.totalLoans !== undefined ? `<div class="result-field"><label>Total Loans</label><span>${sd.totalLoans}</span></div>` : ''}
+      ${sd.totalAmount ? `<div class="result-field"><label>Total Portfolio</label><span style="color:#4f46e5;font-weight:800">${fmtN(sd.totalAmount)} IQD</span></div>` : ''}
+    `;
+  }
+  return '';
+}
 // ── Amount & Status helpers ────────────────────────────────────────────────
 function getAmountField(d) {
   let amount = null;
@@ -391,8 +431,16 @@ function getStatusField(d) {
 }
 
 function getTypeLabel(type) {
-  const map = { payment: t('result.paymentType'), loan: t('result.loanType'), customer: t('result.customerType') };
-  return map[type] || type || 'Invoice';
+  const map = {
+    payment:     t('result.paymentType')     || 'Payment Receipt',
+    loan:        t('result.loanType')        || 'Loan Invoice',
+    customer:    t('result.customerType')    || 'Customer Statement',
+    companyDebt: t('result.companyDebtType') || 'Company Debt Invoice',
+    debt:        t('result.companyDebtType') || 'Debt Invoice',
+    report:      'Report',
+    daily:       'Daily Report',
+  };
+  return map[type] || (type ? type.charAt(0).toUpperCase() + type.slice(1) : 'Invoice');
 }
 
 // ── Full invoice HTML builder ──────────────────────────────────────────────
@@ -407,7 +455,7 @@ function buildInvoiceHtmlFromData(d) {
   };
   const primary = '#1e3a8a', accent = '#2563eb';
   const sd = d.data || {};
-  const verifyURL = `https://verify.amezona.com?code=${d.invoiceNumber}`;
+  const verifyURL = `https://www.shirwanit.com?code=${d.invoiceNumber}`;
   const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=110x110&format=png&ecc=H&margin=4&data=${encodeURIComponent(verifyURL)}`;
 
   let rows = '';
@@ -429,6 +477,15 @@ function buildInvoiceHtmlFromData(d) {
       <tr><td>Status</td><td>${sd.status||'—'}</td></tr>
       <tr><td>Total Paid</td><td>${fmtN(sd.totalPaid)} IQD</td></tr>
       <tr><td>Remaining</td><td>${fmtN(sd.remaining)} IQD</td></tr>
+    `;
+  } else if (d.type === 'companyDebt' || d.type === 'debt') {
+    rows = `
+      <tr class="hl"><td>Creditor / Company</td><td>${sd.creditorName||d.customer?.name||'—'}</td></tr>
+      <tr><td>Debt Amount</td><td>${fmtN(sd.debtAmount||sd.amount)} IQD</td></tr>
+      ${sd.dueDate?`<tr><td>Due Date</td><td>${fmtD(sd.dueDate)}</td></tr>`:''}
+      <tr><td>Amount Paid</td><td style="color:#059669">${fmtN(sd.amountPaid||sd.totalPaid)} IQD</td></tr>
+      <tr><td>Remaining Balance</td><td style="color:#dc2626">${fmtN(sd.remaining)} IQD</td></tr>
+      ${sd.status?`<tr><td>Status</td><td style="text-transform:capitalize">${sd.status}</td></tr>`:''}
     `;
   } else {
     rows = `<tr class="hl"><td>Total Portfolio</td><td>${fmtN(sd.totalAmount)} IQD</td></tr>
@@ -481,7 +538,7 @@ tr.hl td{background:#eff6ff;color:#1d4ed8}
 <div class="stripe"></div>
 <div class="v-banner">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-  VERIFIED &amp; AUTHENTIC — Issued by ${d.company?.name||'Loan Management Pro'}
+  VERIFIED &amp; AUTHENTIC — Issued by ${d.company?.name||'SHIRWAN IT'}
 </div>
 <div class="hdr">
   <div style="display:flex;align-items:flex-start;gap:12px">
@@ -494,10 +551,10 @@ tr.hl td{background:#eff6ff;color:#1d4ed8}
       </svg>
     </div>
     <div>
-      <div class="co-name">${d.company?.name||'Loan Management Pro'}</div>
+      <div class="co-name">${d.company?.name||'SHIRWAN IT'}</div>
       <div class="co-line">📍 ${d.company?.address||''}</div>
       <div class="co-line">📞 ${d.company?.phone||''} | ✉️ ${d.company?.email||''}</div>
-      <div class="co-line">🌐 ${d.company?.website||'verify.amezona.com'}</div>
+      <div class="co-line">🌐 ${d.company?.website||'www.shirwanit.com'}</div>
     </div>
   </div>
   <div style="text-align:right">
@@ -519,7 +576,7 @@ tr.hl td{background:#eff6ff;color:#1d4ed8}
     </div>
     <div class="bc">
       <div class="bc-lbl">Issued By</div>
-      <div class="bc-name">${d.company?.name||'Loan Management Pro'}</div>
+      <div class="bc-name">${d.company?.name||'SHIRWAN IT'}</div>
       ${d.company?.address?`<p>📍 ${d.company.address}</p>`:''}
       ${d.company?.email?`<p>✉️ ${d.company.email}</p>`:''}
     </div>
@@ -530,8 +587,8 @@ tr.hl td{background:#eff6ff;color:#1d4ed8}
 <div class="ftr">
   <div class="ftr-terms">
     <h6>Verification Certificate</h6>
-    <p>Verified on ${new Date().toLocaleString()} via verify.amezona.com</p>
-    <p>© ${new Date().getFullYear()} ${d.company?.name||'Loan Management Pro'}. All rights reserved.</p>
+    <p>Verified on ${new Date().toLocaleString()} via www.shirwanit.com</p>
+    <p>© ${new Date().getFullYear()} ${d.company?.name||'SHIRWAN IT'}. All rights reserved.</p>
   </div>
   <div class="qr-box">
     <img class="qr-img" src="${qrURL}" alt="QR"
@@ -539,7 +596,7 @@ tr.hl td{background:#eff6ff;color:#1d4ed8}
     <div class="qr-lbl">Scan to re-verify</div>
   </div>
 </div>
-<div class="pg">Page 1 of 1 | ${d.invoiceNumber} | verify.amezona.com</div>
+<div class="pg">Page 1 of 1 | ${d.invoiceNumber} | www.shirwanit.com</div>
 </div>
 </body></html>`;
 }
@@ -630,16 +687,16 @@ function downloadVerificationReport(data) {
   <div class="card">
     <div class="badge">✓ ${t('result.verified')}</div>
     <h1>${data.invoiceNumber || 'Invoice'}</h1>
-    <p class="sub">${t('result.verifiedSub')} <strong>${data.company?.name || 'Loan Management Pro'}</strong></p>
+    <p class="sub">${t('result.verifiedSub')} <strong>${data.company?.name || 'SHIRWAN IT'}</strong></p>
     <div class="inv-num">${data.invoiceNumber || ''}</div>
     <div class="grid">
       <div class="field"><label>${t('result.customer')}</label><span>${data.customer?.name || '—'}</span></div>
       <div class="field"><label>${t('result.type')}</label><span>${getTypeLabel(data.type)}</span></div>
       <div class="field"><label>${t('result.created')}</label><span>${formatDate(data.createdAt)}</span></div>
-      <div class="field"><label>${t('result.company')}</label><span>${data.company?.name || 'Loan Management Pro'}</span></div>
+      <div class="field"><label>${t('result.company')}</label><span>${data.company?.name || 'SHIRWAN IT'}</span></div>
     </div>
     <div class="footer">
-      Verified on ${new Date().toLocaleString()} via verify.amezona.com<br>
+      Verified on ${new Date().toLocaleString()} via www.shirwanit.com<br>
       This report confirms the authenticity of the above invoice.
     </div>
   </div>
